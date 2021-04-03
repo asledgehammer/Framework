@@ -1,0 +1,25 @@
+plugins {
+    id 'java'
+    id 'org.jetbrains.kotlin.jvm'
+}
+
+group 'jab.sledgehammer'
+version '1.0.0'
+
+configurations {
+    shade
+    compile.extendsFrom shade
+}
+
+repositories {
+    mavenCentral()
+    mavenLocal()
+}
+
+dependencies {
+    compileOnly project(":config")
+}
+
+jar {
+    baseName "Sledgehammer-Framework-Permission"
+}

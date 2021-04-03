@@ -1,0 +1,8 @@
+rootProject.name = 'Sledgehammer-Framework'
+include 'config'
+include 'langpack'
+include 'interface'
+include 'event'
+include 'permission'
+include 'plugin'
+include 'task'

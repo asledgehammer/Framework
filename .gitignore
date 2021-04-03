@@ -1,0 +1,6 @@
+**/build/**
+craftboid/
+.gradle/
+.idea/
+gradle/
+gradlew
