@@ -486,8 +486,8 @@ class Plugin(private val file: File) {
             version = cfg.getString("version")
 
             val modulesCfg = cfg.getSection("modules")
-            for ((key, value) in modulesCfg) {
-                require(value is ConfigSection) { "The module \"$key\" failed to load. (Not a configured section)" }
+            for (key in modulesCfg.getKeys()) {
+                require(modulesCfg.isSection(key)) { "The module \"$key\" failed to load. (Not a configured section)" }
                 modules[key] = (Module.Properties(this, key, modulesCfg.getSection(key)))
             }
 

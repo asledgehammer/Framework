@@ -30,16 +30,16 @@ object Permissions {
         fun loadPermissions(cfg: ConfigSection): List<Permission> {
             val list = ArrayList<Permission>()
             val permissions = cfg.getSection("permissions")
-            for ((context, flag) in permissions) {
-                if (!context.startsWith(ConfigSection.SEPARATOR)) {
-                    System.err.println("Invalid permission context syntax: $context")
+            for (key in permissions.getKeys()) {
+                if (!key.startsWith(ConfigSection.SEPARATOR)) {
+                    System.err.println("Invalid permission context syntax: $key")
                     continue
                 }
-                if (flag !is Boolean) {
-                    System.err.println("Invalid permission flag: $flag")
+                if (!permissions.isBoolean(key)) {
+                    System.err.println("Invalid permission flag: ${permissions.get(key)}")
                     continue
                 }
-                list.add(Permission(context, flag))
+                list.add(Permission(key, permissions.getBoolean(key)))
             }
             return list
         }

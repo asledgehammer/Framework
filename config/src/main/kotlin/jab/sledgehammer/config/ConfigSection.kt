@@ -11,7 +11,7 @@ import kotlin.collections.HashMap
  *
  * @author Jab
  */
-open class ConfigSection internal constructor(val name: String) : Iterable<Pair<String, Any>> {
+open class ConfigSection internal constructor(val name: String) {
 
     /**
      * TODO: Document.
@@ -44,7 +44,12 @@ open class ConfigSection internal constructor(val name: String) : Iterable<Pair<
      */
     internal val fields = HashMap<String, Any>()
 
-    override fun iterator(): Iterator<Pair<String, Any>> = SectionIterator(this)
+    fun getKeys(): List<String> {
+        val list = ArrayList<String>()
+        list.addAll(children.keys)
+        list.addAll(fields.keys)
+        return Collections.unmodifiableList(list)
+    }
 
     /**
      * TODO: Document.
@@ -338,24 +343,5 @@ open class ConfigSection internal constructor(val name: String) : Iterable<Pair<
          * TODO: Document.
          */
         const val SEPARATOR = '.'
-    }
-
-    /**
-     * TODO: Document.
-     *
-     * @author Jab
-     */
-    class SectionIterator(cfg: ConfigSection) : Iterator<Pair<String, Any>> {
-
-        private val pairs = ArrayList<Pair<String, Any>>()
-        private var index = 0
-
-        init {
-            for ((key, value) in cfg.children) pairs.add(Pair(key, value))
-            for ((key, value) in cfg.fields) pairs.add(Pair(key, value))
-        }
-
-        override fun hasNext(): Boolean = index < pairs.lastIndex
-        override fun next(): Pair<String, Any> = pairs.get(index++)
     }
 }
