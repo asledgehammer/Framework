@@ -1,6 +1,6 @@
 package jab.sledgehammer.config.test
 
-import jab.sledgehammer.config.ConfigFile
+import com.asledgehammer.config.ConfigFile
 import org.junit.jupiter.api.Test
 import java.io.File
 
