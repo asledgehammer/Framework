@@ -1,36 +1,36 @@
-@file:Suppress("MemberVisibilityCanBePrivate", "unused")
-
-package com.asledgehammer.config
+package com.asledgehammer.cfg
 
 import org.yaml.snakeyaml.DumperOptions
 import org.yaml.snakeyaml.Yaml
 import java.io.*
 
-/**
- * TODO: Document.
- *
- * @author Jab
- */
-class ConfigFile : ConfigSection("") {
+class YamlFile(file: File) : CFGFile(file) {
 
     /**
-     * TODO: Document.
+     * Parse and read from a YAML file.
+     *
+     * @param file The file to process.
      */
-    fun load(file: File): ConfigFile = load(FileInputStream(file))
+    fun read(): CFGFile = read(FileInputStream(file))
 
     /**
-     * TODO: Document.
+     * Parse and read from a InputStream.
+     *
+     * @param inputStream The stream to parse and read.
      */
-    fun load(inputStream: InputStream): ConfigFile {
+    fun read(inputStream: InputStream): CFGFile {
         @Suppress("UNCHECKED_CAST")
-        load(yaml.load(inputStream) as Map<String, Any>)
+        read(yaml.load(inputStream) as Map<String, Any>)
         return this
     }
 
     /**
-     * TODO: Document.
+     * Writes the section to a YAML file.
+     *
+     * @param file The file to write.
+     * @param overwrite Set this to true to overwrite a file if it already exists.
      */
-    fun save(file: File, overwrite: Boolean = false) {
+    fun write(file: File, overwrite: Boolean = false) {
         if (!overwrite && file.exists()) return
         val bos = BufferedOutputStream(FileOutputStream(file))
         val writer = bos.writer()
@@ -44,15 +44,20 @@ class ConfigFile : ConfigSection("") {
     }
 
     @Suppress("UNCHECKED_CAST")
-    private fun load(map: Map<String, Any>) {
-        fun recurse(name: String, map: Map<String, Any>): ConfigSection {
-            val section = ConfigSection(name)
+    private fun read(map: Map<String, Any>) {
+
+        fun recurse(name: String, map: Map<String, Any>): CFGSection {
+
+            val section = CFGSection(name)
+
             for ((key, value) in map) {
                 if (value is Map<*, *>) section.set(key, recurse(key, value as Map<String, Any>))
                 else section.set(key, value)
             }
+
             return section
         }
+
         for ((key, value) in map) {
             if (value is Map<*, *>) set(key, recurse(key, value as Map<String, Any>))
             else set(key, value)
@@ -62,7 +67,7 @@ class ConfigFile : ConfigSection("") {
     companion object {
 
         /**
-         * TODO: Document.
+         * The SnakeYAML API to parse and compile YAML.
          */
         val yaml: Yaml
 

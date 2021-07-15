@@ -2,8 +2,8 @@
 
 package com.asledgehammer.plugin
 
-import com.asledgehammer.config.ConfigFile
-import com.asledgehammer.config.ConfigSection
+import com.asledgehammer.cfg.CFGFile
+import com.asledgehammer.cfg.CFGSection
 import com.asledgehammer.event.Events
 import java.io.File
 import java.io.FileOutputStream
@@ -61,7 +61,7 @@ class Plugin(private val file: File) {
         try {
             val inputStream: InputStream = getResource("plugin.yml")
                 ?: throw RuntimeException("plugin.yml is not found in the plugin: ${properties.name}")
-            val cfg = ConfigFile().load(inputStream)
+            val cfg = CFGFile().load(inputStream)
             properties = Properties(cfg)
             inputStream.close()
             directory = File(Plugins.directory, properties.name + File.separator)
@@ -455,7 +455,7 @@ class Plugin(private val file: File) {
      *
      * @property cfg
      */
-    class Properties(val cfg: ConfigSection) {
+    class Properties(val cfg: CFGSection) {
 
         /**
          * TODO: Document.

@@ -1,10 +1,13 @@
 plugins {
     id 'java'
     id 'org.jetbrains.kotlin.jvm'
+    id 'maven-publish'
 }
 
-group 'jab.sledgehammer'
+group 'com.asledgehammer'
 version '1.0.0'
+
+jar.duplicatesStrategy = DuplicatesStrategy.EXCLUDE
 
 configurations {
     shade
@@ -19,7 +22,7 @@ repositories {
 dependencies {
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.6.0'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine'
-    compile 'org.yaml:snakeyaml:1.9'
+    implementation 'org.yaml:snakeyaml:1.9'
 }
 
 test {
@@ -27,10 +30,23 @@ test {
 }
 
 jar {
-    baseName "Sledgehammer-Framework-Config"
+    baseName "Utilities-Server"
     configurations.shade.each { dep ->
         from(project.zipTree(dep)) {
-            exclude "META-INF", "META-INF/**", "**/about.html", "*/about.html", "about.html"
+            // Shade all of asledgehammer utilities.
+            // Include all compiled {group}/shared/.. compiled classes.
+            include 'com/asledgehammer/**', "${project.group.toString().replace(".", "/")}/**"
+        }
+    }
+}
+
+publishing {
+    publications {
+        maven(MavenPublication) {
+            groupId = "com.asledgehammer"
+            artifactId = "Framework-Config"
+            version = "${project.version}"
+            from components.java
         }
     }
 }

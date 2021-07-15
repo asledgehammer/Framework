@@ -1,12 +1,13 @@
 package jab.sledgehammer.config.test
 
-import com.asledgehammer.config.ConfigFile
+import com.asledgehammer.cfg.CFGFile
+import com.asledgehammer.cfg.YamlFile
 import org.junit.jupiter.api.Test
 import java.io.File
 
 class TestConfigSection {
 
-    lateinit var config: ConfigFile
+    lateinit var config: CFGFile
 
     @Test
     fun testList() {
@@ -17,7 +18,7 @@ class TestConfigSection {
     }
 
     private fun load() {
-        config = ConfigFile().load(File("src/test/resources/test.yml"))
+        config = YamlFile(File("src/test/resources/test.yml")).read()
     }
 
 }

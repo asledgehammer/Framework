@@ -2,7 +2,7 @@
 
 package com.asledgehammer.plugin
 
-import com.asledgehammer.config.ConfigSection
+import com.asledgehammer.cfg.CFGSection
 import java.io.File
 import java.util.*
 
@@ -188,7 +188,7 @@ open class Module {
      * @property name
      * @property cfg
      */
-    class Properties(val plugin: Plugin.Properties, val name: String, val cfg: ConfigSection) {
+    class Properties(val plugin: Plugin.Properties, val name: String, val cfg: CFGSection) {
 
         /**
          * TODO: Document.

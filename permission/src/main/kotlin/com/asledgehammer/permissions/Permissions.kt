@@ -2,8 +2,8 @@
 
 package com.asledgehammer.permissions
 
-import com.asledgehammer.config.ConfigFile
-import com.asledgehammer.config.ConfigSection
+import com.asledgehammer.cfg.CFGFile
+import com.asledgehammer.cfg.CFGSection
 import java.io.File
 import java.util.*
 import kotlin.collections.HashMap
@@ -27,11 +27,11 @@ object Permissions {
 
         val groupParentIds = HashMap<UUID, UUID>()
 
-        fun loadPermissions(cfg: ConfigSection): List<Permission> {
+        fun loadPermissions(cfg: CFGSection): List<Permission> {
             val list = ArrayList<Permission>()
             val permissions = cfg.getSection("permissions")
             for (key in permissions.getKeys()) {
-                if (!key.startsWith(ConfigSection.SEPARATOR)) {
+                if (!key.startsWith(CFGSection.SEPARATOR)) {
                     System.err.println("Invalid permission context syntax: $key")
                     continue
                 }
@@ -44,7 +44,7 @@ object Permissions {
             return list
         }
 
-        fun loadUsers(cfg: ConfigSection) {
+        fun loadUsers(cfg: CFGSection) {
             for ((idString, cfgUser) in cfg.sections) {
                 val id: UUID
                 try {
@@ -70,7 +70,7 @@ object Permissions {
             }
         }
 
-        fun loadGroups(cfg: ConfigSection) {
+        fun loadGroups(cfg: CFGSection) {
             for ((idString, cfgGroup) in cfg.sections) {
                 val id: UUID
                 try {
@@ -140,7 +140,7 @@ object Permissions {
             }
         }
 
-        val config = ConfigFile().load(file)
+        val config = CFGFile().load(file)
         if (config.isSection("users")) loadUsers(config.getSection("users"))
         if (config.isSection("groups")) loadGroups(config.getSection("groups"))
         if (groupsById.isNotEmpty() && groupParentIds.isNotEmpty()) {
@@ -153,13 +153,13 @@ object Permissions {
      */
     fun saveYAML(file: File) {
 
-        fun savePermissions(cfg: ConfigSection, collection: PermissionCollection) {
+        fun savePermissions(cfg: CFGSection, collection: PermissionCollection) {
             for ((_, permission) in collection.permissions) {
                 cfg.set(permission.context, permission.flag)
             }
         }
 
-        fun saveGroup(cfg: ConfigSection, group: PermissionGroup) {
+        fun saveGroup(cfg: CFGSection, group: PermissionGroup) {
             cfg.set("name", group.name)
             if (group.parent != null) cfg.set("parent", group.parent!!.id.toString())
             if (group.hasMembers()) {
@@ -172,20 +172,20 @@ object Permissions {
             savePermissions(cfg.createSection("permissions"), group)
         }
 
-        fun saveUser(cfg: ConfigSection, user: PermissionUser) {
+        fun saveUser(cfg: CFGSection, user: PermissionUser) {
             cfg.set("name", user.name)
             savePermissions(cfg.createSection("permissions"), user)
         }
 
-        fun saveGroups(cfg: ConfigSection) {
+        fun saveGroups(cfg: CFGSection) {
             for ((_, group) in groupsById) saveGroup(cfg.createSection(group.id.toString()), group)
         }
 
-        fun saveUsers(cfg: ConfigSection) {
+        fun saveUsers(cfg: CFGSection) {
             for ((_, user) in usersById) saveUser(cfg.createSection(user.id.toString()), user)
         }
 
-        val config = ConfigFile().load(file)
+        val config = CFGFile().load(file)
         saveGroups(config.createSection("groups"))
         saveUsers(config.createSection("users"))
     }
